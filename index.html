@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>わくわくHTML/CSS入門</title>
+  <meta name="description" content="このサイトは、HTMLとCSSの基礎からレイアウト、レスポンシブ、アニメーションまで、行ごとに丁寧な解説を付けて学べる点が魅力です。白を基調としたシンプルで見やすいデザインと、コピー可能なコードブロックで実践的に学習できます。" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap');
+
+    :root{
+      --accent-orange: #ffd8b3; /* 薄いオレンジ */
+      --accent-deep: #d35400;   /* アクセント（濃いオレンジ） */
+      --muted: #7a5a45;
+      --card: #ffffff;
+      --code-bg: #0b1320;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+
+    /* 全体（白ベース） */
+    body{
+      font-family: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: #ffffff; /* メインは白 */
+      color: #000000; /* 文字は黒 */
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* 概要ヘッダー */
+    .overview-header {
+      max-width: 1300px;
+      margin: 0 auto 2rem auto;
+    }
+    .overview-header .header {
+      margin-bottom: 0;
+    }
+
+    /* レイアウト */
+    .container{display:flex;max-width:1300px;margin:0 auto;gap:2rem;align-items:flex-start}
+
+    /* サイドバー：白基調＋薄オレンジの左境界/アクセント */
+    .sidebar{
+      width:300px;padding:1.6rem;background:var(--card);border:1px solid rgba(211,84,0,0.06);border-left:6px solid var(--accent-orange);position:sticky;top:1.2rem;
+      max-height:calc(100vh - 2.4rem);overflow:auto;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.03);
+    }
+    .sidebar h2{font-size:1.1rem;color:var(--accent-deep);margin-bottom:.3rem;font-weight:700}
+    .sidebar .small{font-size:.92rem;color:var(--muted);margin-bottom:0.8rem}
+    .nav-menu{list-style:none;padding-left:0}
+    .nav-menu a{display:block;padding:.5rem 0;color:#4b2a17;text-decoration:none;border-radius:4px;padding-left:0.4rem}
+    .nav-menu a:hover{background:var(--accent-orange)}
+    .nav-menu a.active{color:var(--accent-deep);font-weight:700;background:rgba(211,84,0,0.04)}
+
+    /* メイン */
+    main{flex:1}
+    .content-inner{max-width:920px;margin:0 auto}
+    .header{margin-bottom:1.2rem}
+    .page-title{font-size:1.8rem;color:var(--accent-deep);margin-bottom:.2rem;font-weight:700}
+    .lead{background:linear-gradient(180deg, rgba(255,216,179,0.35), rgba(255,216,179,0.06));padding:0.9rem;border-radius:8px;margin-top:0.6rem;border:1px solid rgba(211,84,0,0.06)}
+
+    /* セクション */
+    .section{margin-bottom:2rem}
+    .section-title{font-size:1.15rem;color:var(--accent-deep);margin-bottom:.6rem;font-weight:700}
+    .card{background:var(--card);padding:1rem;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.03);border:1px solid rgba(211,84,0,0.05)}
+    .explain{margin-top:0.7rem;color:#5a341f;font-size:0.98rem;line-height:1.7}
+    .hint{margin-top:0.6rem;color:var(--muted);font-size:0.92rem}
+
+    /* コード */
+    details.explain{margin-top:0.6rem}
+    details.explain summary{font-weight:600;cursor:pointer;padding:0.45rem;border-radius:6px;background:transparent}
+    details.explain[open] summary{background:rgba(211,84,0,0.04)}
+    details.explain p{margin-top:0.5rem;color:#5a341f;line-height:1.6}
+
+    .code{background:var(--code-bg);color:#ffffff;padding:1rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.95rem;white-space:pre;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+    .code + .explain{margin-top:0.8rem}
+
+    /* コピーボタン */
+    .copy-btn{background:var(--accent-deep);color:#fff;border:none;padding:.45rem .6rem;border-radius:6px;cursor:pointer}
+
+    /* 視認性のための小要素 */
+    .note{font-size:0.95rem;color:#6b3b1f;margin-top:0.6rem}
+
+    /* レスポンシブ：スマホ幅 */
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column; /* 縦並びに */
+        gap: 1rem;
+      }
+
+      .sidebar,
+      main {
+        width: 100%; /* サイドバーも本文も幅を揃える */
+        max-width: 100%;
+        position: relative;
+        top: auto;
+      }
+
+      .content-inner {
+        padding: 0 1rem; /* サイドバーと同じ左右余白 */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 概要ヘッダー（独立配置） -->
+  <div class="overview-header">
+    <header id="overview" class="header">
+      <h1 class="page-title">🌐 わくわくHTML/CSS入門</h1>
+      <div class="lead card">
+        <p class="note">このサイトは、HTML と CSS の基礎からレイアウトやレスポンシブ、簡単なアニメーションまで、行ごとに丁寧な解説を付けて学べる点が魅力です。<br>白を基調としたシンプルで見やすいデザインと、コピー可能なコードブロックで実践的に学習できます。</p>
+      </div>
+    </header>
+  </div>
+
+  <div class="container">
+    <aside class="sidebar" aria-label="目次">
+      <h2>目次</h2>
+      <nav>
+        <ul class="nav-menu" id="toc">
+          <li><a href="#overview">概要</a></li>
+          <li><a href="#html-basics">HTML の基礎</a></li>
+          <li><a href="#semantic">セマンティック要素</a></li>
+          <li><a href="#links-images">リンクと画像</a></li>
+          <li><a href="#forms">フォーム要素</a></li>
+          <li><a href="#css-basics">CSS の基礎</a></li>
+          <li><a href="#box-model">ボックスモデル</a></li>
+          <li><a href="#layout">レイアウト（Flex / Grid）</a></li>
+          <li><a href="#responsive">レスポンシブ</a></li>
+          <li><a href="#typography">タイポグラフィと色使い</a></li>
+          <li><a href="#transitions">トランジション & アニメーション</a></li>
+          <li><a href="#mini-project">ミニプロジェクト</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="content-inner">
+        <!-- HTML basics -->
+        <section id="html-basics" class="section">
+          <h2 class="section-title">HTML の基礎</h2>
+          <div class="card">
+            <pre class="code" id="code-html-basic">&lt;!doctype html&gt;
+&lt;html lang="ja"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;サンプルページ&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;見出し&lt;/h1&gt;
+    &lt;p&gt;段落（パラグラフ）です。&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <strong>行ごとの解説</strong>
+              <ol>
+                <li><code>&lt;!doctype html&gt;</code>：この行は文書が HTML5 であることを宣言し、ブラウザにレンダリングモード（標準モード）で表示させるために必要です。</li>
+                <li><code>&lt;html lang="ja"&gt;</code>：ドキュメント全体を包むルート要素で、<code>lang="ja"</code> は文書の主要言語が日本語であることを示し、検索やスクリーンリーダーで重要になります。</li>
+                <li><code>&lt;head&gt;</code>：メタ情報（タイトルや文字コード、外部リソース指定など）を置く領域の開始タグです。ブラウザには直接表示されませんが動作に影響します。</li>
+                <li><code>&lt;meta charset="utf-8"&gt;</code>：文書の文字エンコーディングを UTF-8 に指定し、日本語や絵文字などを正しく表示するために必須です。</li>
+                <li><code>&lt;title&gt;サンプルページ&lt;/title&gt;</code>：ブラウザのタブや検索結果に表示されるページタイトルを設定します。SEO とユーザーの識別に重要です。</li>
+                <li><code>&lt;/head&gt;</code>：<code>head</code> セクションの終了タグで、以降は表示コンテンツ（<code>body</code>）に移ります。</li>
+                <li><code>&lt;body&gt;</code>：実際にブラウザ上に表示されるコンテンツ（見出し、段落、画像など）を置く領域の開始タグです。</li>
+                <li><code>&lt;h1&gt;見出し&lt;/h1&gt;</code>：文書内で最も重要な見出し（見出しレベル1）を表します。SEO とアクセシビリティで先頭に1つだけ置くのが推奨です。</li>
+                <li><code>&lt;p&gt;段落（パラグラフ）です。&lt;/p&gt;</code>：文章の段落を示す要素で、テキストのまとまりを意味的に分けます。余白や読みやすさに関わります。</li>
+                <li><code>&lt;/body&gt;</code>：表示コンテンツの終了タグです。これより下には表示すべき要素を置きません。</li>
+                <li><code>&lt;/html&gt;</code>：HTML ドキュメント全体の終了タグで、このファイルがここで終わることをブラウザに示します。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-html-basic">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- semantic elements -->
+        <section id="semantic" class="section">
+          <h2 class="section-title">セマンティック要素</h2>
+          <div class="card">
+            <pre class="code" id="code-semantic">&lt;header&gt;
+  &lt;h1&gt;サイトのタイトル&lt;/h1&gt;
+&lt;/header&gt;
+
+&lt;nav&gt;
+  &lt;ul&gt;&lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;記事タイトル&lt;/h2&gt;
+    &lt;p&gt;記事本文...&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;著作権情報&lt;/footer&gt;</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>&lt;header&gt;</code>：ページやセクションの冒頭に置く「導入用」コンテナで、ロゴやサイトタイトル、グローバルナビなどを置きます。</li>
+                <li><code>&lt;h1&gt;サイトのタイトル&lt;/h1&gt;</code>：そのページやサイト全体の主題を示す最上位見出しで、検索エンジンや支援技術が内容を理解する手がかりになります。</li>
+                <li><code>&lt;/header&gt;</code>：ヘッダー領域の終了タグです。ここまでが冒頭情報のまとまりになります。</li>
+                <li>（空行）：可読性のための空行。HTML においては表示に影響しませんが、コードの整理に有効です。</li>
+                <li><code>&lt;nav&gt;</code>：サイト内の主要なナビゲーションを示す要素で、検索エンジンやスクリーンリーダーに「メニュー領域」であることを伝えます。</li>
+                <li><code>&lt;ul&gt;&lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</code>：ナビ項目をリスト化した例で、リスト（<code>ul</code>）中にリンク（<code>a</code>）を置くことで構造化されたメニューになります。</li>
+                <li><code>&lt;/nav&gt;</code>：ナビゲーション領域の終了タグです。</li>
+                <li>（空行）：区切りの空白行。</li>
+                <li><code>&lt;main&gt;</code>：ページの主要コンテンツを示す要素で、ページ内に1つだけ置くのがベストプラクティスです（副次的コンテンツは除く）。</li>
+                <li><code>&lt;article&gt;</code>：独立して配布・再利用できる記事や投稿を示す要素で、ブログの記事やニュース項目に最適です。</li>
+                <li><code>&lt;h2&gt;記事タイトル&lt;/h2&gt;</code>：記事内の主要見出し（h1 の次のレベル）で、記事のセクション見出しとして機能します。</li>
+                <li><code>&lt;p&gt;記事本文...&lt;/p&gt;</code>：記事の本文の段落です。複数段落やセクションに分けて書きます。</li>
+                <li><code>&lt;/article&gt;</code>：記事ブロックの終了タグです。記事単位のまとまりがここで終わります。</li>
+                <li><code>&lt;/main&gt;</code>：メインコンテンツ領域の終了タグで、以降は補助的な情報（サイドバーやフッター等）を置きます。</li>
+                <li>（空行）：区切りの空行。</li>
+                <li><code>&lt;footer&gt;著作権情報&lt;/footer&gt;</code>：ページ下部の脚注的領域で、著作権や連絡先、補足リンクなどを置くのに使います。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-semantic">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- links and images -->
+        <section id="links-images" class="section">
+          <h2 class="section-title">リンクと画像</h2>
+          <div class="card">
+            <pre class="code" id="code-links">&lt;a href="https://example.com" target="_blank" rel="noopener"&gt;外部リンク&lt;/a&gt;
+
+&lt;img src="image.jpg" alt="説明テキスト"&gt;  &lt;!-- alt は必須 --&gt;</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>&lt;a href="https://example.com" target="_blank" rel="noopener"&gt;外部リンク&lt;/a&gt;</code>：外部サイトへのリンクで、<code>href</code> が遷移先、<code>target="_blank"</code> は新しいタブで開く指定、<code>rel="noopener"</code> はセキュリティ（開いたページから元ページを操作されるのを防ぐ）やパフォーマンスに効果があります。</li>
+                <li>（空行）：見やすさのための空行です。表示には影響しません。</li>
+                <li><code>&lt;img src="image.jpg" alt="説明テキスト"&gt;  &lt;!-- alt は必須 --&gt;</code>：画像を表示する要素で、<code>src</code> が画像ファイルのパス、<code>alt</code> は画像が表示できない時やスクリーンリーダー向けに意味を伝える代替テキストで、アクセシビリティ上ほぼ必須です（装飾画像は空文字 <code>alt=""</code> にすることでスクリーンリーダーを煩わせません）。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-links">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- forms -->
+        <section id="forms" class="section">
+          <h2 class="section-title">フォーム要素</h2>
+          <div class="card">
+            <pre class="code" id="code-forms">&lt;form action="/submit" method="post"&gt;
+  &lt;label&gt;名前: &lt;input type="text" name="name" required&gt;&lt;/label&gt;
+  &lt;label&gt;メール: &lt;input type="email" name="email"&gt;&lt;/label&gt;
+  &lt;button type="submit"&gt;送信&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>&lt;form action="/submit" method="post"&gt;</code>：フォーム開始タグで、<code>action</code> は送信先の URL、<code>method</code> は送信方法（<code>post</code> はデータをボディで送る）を指定します。セキュリティやサーバー設計に合わせて使い分けます。</li>
+                <li><code>&lt;label&gt;名前: &lt;input type="text" name="name" required&gt;&lt;/label&gt;</code>：<code>label</code> は入力要素のラベルで、ラベルをクリックすると対応する入力にフォーカスが移る（アクセシビリティ向上）。<code>input type="text"</code> は単一行のテキスト入力、<code>name</code> はサーバー側で受け取るキー、<code>required</code> は送信時の必須バリデーションです。</li>
+                <li><code>&lt;label&gt;メール: &lt;input type="email" name="email"&gt;&lt;/label&gt;</code>：<code>type="email"</code> はメールアドレス形式を期待する入力で、ブラウザが簡易チェックやモバイルでメールキーボードを出すなどの恩恵があります。<code>name</code> は送信時のキー名です。</li>
+                <li><code>&lt;button type="submit"&gt;送信&lt;/button&gt;</code>：フォーム送信用ボタンで、<code>type="submit"</code> によりクリックでフォームの送信が発生します。スタイルや aria 属性で見た目・アクセシビリティ改善可能です。</li>
+                <li><code>&lt;/form&gt;</code>：フォームの終了タグ。フォーム内の構成要素はここで閉じられます。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-forms">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- css basics -->
+        <section id="css-basics" class="section">
+          <h2 class="section-title">CSS の基礎</h2>
+          <div class="card">
+            <pre class="code" id="code-css-basic">/* セレクタの基本 */
+h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+p.lead { font-size: 1.1rem; color: #5a341f; }
+
+/* クラス・ID */
+.card { padding: 1rem; border-radius: 8px; }
+#main-header { background: var(--accent-orange); }</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>/* セレクタの基本 */</code>：CSS のコメントで説明を入れる行。コメントはブラウザに無視され、メンテナンス性を上げます。</li>
+                <li><code>h1 { font-size: 2rem; margin-bottom: 0.5rem; }</code>：要素セレクタ（<code>h1</code>）の例で、<code>font-size: 2rem</code> はルート基準の相対サイズ、<code>margin-bottom</code> で下の余白を調整します。</li>
+                <li><code>p.lead { font-size: 1.1rem; color: #5a341f; }</code>：クラス付きセレクタ（<code>p.lead</code>）の例で、そのクラスを持つ <code>p</code> にだけスタイルが適用されます。色は 16 進カラーコードで指定しています。</li>
+                <li>（空行）：読みやすさのための空行。</li>
+                <li><code>/* クラス・ID */</code>：このコメントは次にクラスと ID の例が続くことを示します。ドキュメント整理に有用です。</li>
+                <li><code>.card { padding: 1rem; border-radius: 8px; }</code>：クラスセレクタ <code>.card</code> の例で、<code>padding</code> は内側余白、<code>border-radius</code> は角丸の半径を指定します。複数要素に適用でき再利用性が高いです。</li>
+                <li><code>#main-header { background: var(--accent-orange); }</code>：ID セレクタ（ページ内で一意に使う想定）で、CSS 変数 <code>--accent-orange</code> を参照して背景色を設定しています。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-css-basic">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- box model -->
+        <section id="box-model" class="section">
+          <h2 class="section-title">ボックスモデル</h2>
+          <div class="card">
+            <pre class="code" id="code-box">/* ボックスモデルの例 */
+.box {
+  width: 300px;
+  padding: 16px;   /* 内側余白 */
+  border: 2px solid #dcd0c3; /* 境界線 */
+  margin: 12px;    /* 外側余白 */
+  box-sizing: border-box; /* 幅に border/padding を含める */
+}</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <p><strong>key</strong>: content + padding + border + margin が要素の表示サイズに影響します。<code>box-sizing: border-box</code> を使うと扱いやすくなります。</p>
+              <ol>
+                <li><code>/* ボックスモデルの例 */</code>：コメントでこのブロックがボックスモデルの説明であることを示しています。</li>
+                <li><code>.box {</code>：クラス <code>.box</code> のスタイル開始行。中括弧内にプロパティが続きます。</li>
+                <li><code>width: 300px;</code>：コンテンツ領域の幅を固定で 300px に指定します（<code>box-sizing</code> の設定によって最終的な見た目幅が変わります）。</li>
+                <li><code>padding: 16px;</code>：要素の内部とコンテンツの間の余白（内側余白）を指定し、テキストや内包要素の余白を確保します。</li>
+                <li><code>border: 2px solid #dcd0c3;</code>：要素の境界線で、太さ・スタイル（solid）・色を指定します。視覚的区切りになります。</li>
+                <li><code>margin: 12px;</code>：要素の外側の余白で、他要素との間隔（外側）を指定します。</li>
+                <li><code>box-sizing: border-box;</code>：この指定で <code>width</code> に <code>padding</code> と <code>border</code> を含めて計算するため、レイアウトが直感的になります（幅オーバーを防ぐ）。</li>
+                <li><code>}</code>：<code>.box</code> スタイルの終了中括弧。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-box">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- layout -->
+        <section id="layout" class="section">
+          <h2 class="section-title">レイアウト（Flex / Grid）</h2>
+          <div class="card">
+            <pre class="code" id="code-flex">&lt;!-- Flexbox の例 --&gt;
+&lt;div class="nav"&gt;
+  &lt;div class="logo"&gt;Logo&lt;/div&gt;
+  &lt;div class="links"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.nav { display:flex; justify-content:space-between; align-items:center; padding:12px; }
+&lt;/style&gt;</pre>
+
+            <pre class="code" id="code-grid" style="margin-top:0.8rem">&lt;!-- Grid の例 --&gt;
+&lt;div class="grid"&gt;
+  &lt;div&gt;1&lt;/div&gt;
+  &lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+&lt;/style&gt;</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <p>Flex は一方向レイアウト（横 or 縦）で整列に向き、Grid は二次元のレイアウト（行と列）でレイアウト設計を強力にサポートします。</p>
+              <ol>
+                <li><code>&lt;!-- Flexbox の例 --&gt;</code>：HTML コメントで、このブロックが Flexbox の例であることを示します（ブラウザ表示には出ません）。</li>
+                <li><code>&lt;div class="nav"&gt;</code>：ナビゲーションコンテナで、Flex レイアウトを適用するためのルート要素にクラスを付けています。</li>
+                <li><code>&lt;div class="logo"&gt;Logo&lt;/div&gt;</code>：ロゴ領域の要素。Flex の子要素として自動で配置されます。</li>
+                <li><code>&lt;div class="links"&gt;...&lt;/div&gt;</code>：リンク群を入れる領域の要素。Flex の <code>justify-content</code> 等で整列されます。</li>
+                <li><code>&lt;/div&gt;</code>：<code>.nav</code> コンテナの閉じタグです。</li>
+                <li>（空行）：可読性のための空行。</li>
+                <li><code>&lt;style&gt;</code>：ページ内スタイルを記述する開始タグ（通常は外部 CSS が望ましいが、例示用に使う）。</li>
+                <li><code>.nav { display:flex; justify-content:space-between; align-items:center; padding:12px; }</code>：<code>.nav</code> に Flexbox を適用し、子要素を左右に分散（<code>space-between</code>）、縦方向中央揃え（<code>align-items:center</code>）にして余白を与える設定です。</li>
+                <li><code>&lt;/style&gt;</code>：スタイルブロックの終了タグ。</li>
+              </ol>
+              <hr>
+              <ol start="1">
+                <li><code>&lt;!-- Grid の例 --&gt;</code>：Grid レイアウト例であることを示すコメント。</li>
+                <li><code>&lt;div class="grid"&gt;</code>：Grid コンテナの開始タグで、内部を格子状にレイアウトします。</li>
+                <li><code>&lt;div&gt;1&lt;/div&gt;</code>：グリッド内の1つ目のセルコンテンツ。</li>
+                <li><code>&lt;div&gt;2&lt;/div&gt;</code>：2つ目のセルコンテンツ。</li>
+                <li><code>&lt;div&gt;3&lt;/div&gt;</code>：3つ目のセルコンテンツ。</li>
+                <li><code>&lt;/div&gt;</code>：<code>.grid</code> コンテナの終了タグ。</li>
+                <li>（空行）：可読性のための空行。</li>
+                <li><code>&lt;style&gt;</code>：内連スタイルの開始タグ（例示用）。</li>
+                <li><code>.grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }</code>：Grid を有効にし、3 列等分（<code>repeat(3, 1fr)</code>）で列幅を均等に割り当て、セル間の間隔を <code>gap</code> で指定しています。</li>
+                <li><code>&lt;/style&gt;</code>：スタイルブロック終了。</li>
+              </ol>
+            </div></details>
+
+            <div style="margin-top:0.8rem">
+              <button class="copy-btn" data-target="code-flex">Flex コードをコピー</button>
+              <button class="copy-btn" data-target="code-grid" style="margin-left:0.6rem">Grid コードをコピー</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- responsive -->
+        <section id="responsive" class="section">
+          <h2 class="section-title">レスポンシブデザイン</h2>
+          <div class="card">
+            <pre class="code" id="code-responsive">@media (max-width: 768px) {
+  .sidebar { display: none; } /* 小さい画面ではサイドバーを折り畳む例 */
+  .content-inner { padding: 0 1rem; }
+}</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>@media (max-width: 768px) {</code>：メディアクエリの開始で、ブラウザ幅が 768px 以下のときに中括弧内のスタイルを有効にします（モバイル向けの切り替えに使います）。</li>
+                <li><code>.sidebar { display: none; }</code>：サイドバーを非表示にして画面スペースを本文に集中させる例。アクセシビリティを考えてトグルメニュー等の代替手段があると良いです。</li>
+                <li><code>.content-inner { padding: 0 1rem; }</code>：本文の左右余白を調整して、モバイルで適切な読みやすさを確保します。</li>
+                <li><code>}</code>：メディアクエリの終了タグ。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-responsive">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- typography -->
+        <section id="typography" class="section">
+          <h2 class="section-title">タイポグラフィと色使い</h2>
+          <div class="card">
+            <pre class="code" id="code-typography">body { font-family: 'Noto Sans JP', sans-serif; line-height: 1.6; color: #2b1a14; }
+h1 { font-weight: 700; color: var(--accent-deep); }
+a { color: var(--accent-deep); text-decoration: none; }</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>body { font-family: 'Noto Sans JP', sans-serif; line-height: 1.6; color: #2b1a14; }</code>：本文全体のフォントと行間（<code>line-height</code>）、基本文字色を設定し、可読性と全体の雰囲気を決めます。フォントフォールバックも指定しています。</li>
+                <li><code>h1 { font-weight: 700; color: var(--accent-deep); }</code>：<code>h1</code> の太さとアクセントカラーを指定し、視覚的な強調を与えて階層を明確にします。</li>
+                <li><code>a { color: var(--accent-deep); text-decoration: none; }</code>：リンクの色と下線を消す指定。視認性は保ちつつデザイン上の一貫性を出します（アクセシビリティのため :focus や :hover のスタイルも検討）。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-typography">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- transitions -->
+        <section id="transitions" class="section">
+          <h2 class="section-title">トランジション & アニメーション</h2>
+          <div class="card">
+            <pre class="code" id="code-trans">/* ホバーで滑らかに色が変わる例 */
+.button {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: var(--accent-deep);
+  color: #fff;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.button:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>/* ホバーで滑らかに色が変わる例 */</code>：このブロックがトランジションの簡単な例であることを示すコメントです。</li>
+                <li><code>.button {</code>：ボタン用のクラススタート。ここに通常時の見た目を定義します。</li>
+                <li><code>padding: 0.6rem 1rem;</code>：上下左右の内側余白を指定し、クリックしやすいサイズにします。</li>
+                <li><code>border-radius: 8px;</code>：ボタンの角を丸めて現代的な見た目にします。</li>
+                <li><code>background: var(--accent-deep);</code>：背景色にアクセントカラーを設定します（ボタンの視認性を担保）。</li>
+                <li><code>color: #fff;</code>：ボタン内テキストを白にして背景と十分なコントラストを確保します。</li>
+                <li><code>transition: transform 200ms ease, box-shadow 200ms ease;</code>：状態変化（transform や box-shadow）のアニメーションを 200ms のイージングで滑らかに行う指定です。</li>
+                <li><code>}</code>：<code>.button</code> のスタイル終了。</li>
+                <li><code>.button:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }</code>：ホバー時にボタンを少し持ち上げる（<code>translateY</code>）と影を付けることで、視覚的に押しやすさやインタラクティブ感を出します。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-trans">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <!-- mini-project -->
+        <section id="mini-project" class="section">
+          <h2 class="section-title">ミニプロジェクト — シンプルなプロフィールカード</h2>
+          <div class="card">
+            <pre class="code" id="code-project">&lt;!-- HTML --&gt;
+&lt;div class="profile"&gt;
+  &lt;img src="avatar.jpg" alt="アバター" class="avatar"&gt;
+  &lt;h3&gt;Toma&lt;/h3&gt;
+  &lt;p&gt;フロントエンドを学んでいます。&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- CSS --&gt;
+.profile { width: 280px; padding: 16px; border-radius: 12px; background: linear-gradient(180deg, var(--accent-orange), #fff); text-align:center; }
+.avatar { width:80px; height:80px; border-radius:50%; object-fit:cover; }</pre>
+
+            <details class="explain"><summary>詳しい行単位解説（クリックで展開）</summary>
+            <div class="explain">
+              <ol>
+                <li><code>&lt;!-- HTML --&gt;</code>：この箇所が HTML 部分の開始であることを示すコメントです。</li>
+                <li><code>&lt;div class="profile"&gt;</code>：プロフィールカード全体を包むコンテナで、背景や余白、角丸を与える対象になります。</li>
+                <li><code>&lt;img src="avatar.jpg" alt="アバター" class="avatar"&gt;</code>：アバター画像の要素で、<code>src</code> は画像ファイル、<code>alt</code> は画像の説明（アクセシビリティ用）、<code>class="avatar"</code> でスタイル指定します。</li>
+                <li><code>&lt;h3&gt;Toma&lt;/h3&gt;</code>：プロフィール名の見出し（h3）で、コンポーネント内での項目名として使います。</li>
+                <li><code>&lt;p&gt;フロントエンドを学んでいます。&lt;/p&gt;</code>：自己紹介の短い段落。複数行にする場合は複数の <code>p</code> を使うと整理しやすいです。</li>
+                <li><code>&lt;/div&gt;</code>：<code>.profile</code> コンテナの閉じタグです。</li>
+              </ol>
+              <hr>
+              <ol start="1">
+                <li>（空行）：HTML と CSS の区切りのための空行。</li>
+                <li><code>&lt;!-- CSS --&gt;</code>：（元コードはプレーンテキストのコメントでしたが、ここでは「CSS 部分」の見出しとして扱います）</li>
+                <li><code>.profile { width: 280px; padding: 16px; border-radius: 12px; background: linear-gradient(180deg, var(--accent-orange), #fff); text-align:center; }</code>：プロフィールカードの見た目を一括指定するスタイルで、固定幅、内側余白、角丸、縦方向グラデーション背景、中央揃えを与えています。</li>
+                <li><code>.avatar { width:80px; height:80px; border-radius:50%; object-fit:cover; }</code>：アバター画像を正方形にし、<code>border-radius:50%</code> で丸く切り取り、<code>object-fit:cover</code> で画像の縦横比を崩さずに枠にフィットさせます。</li>
+              </ol>
+            </div></details>
+            <div style="margin-top:0.8rem"><button class="copy-btn" data-target="code-project">コードをコピー</button></div>
+          </div>
+        </section>
+
+        <footer style="margin-top:1.2rem;color:var(--muted);text-align:center;padding-bottom:2rem;margin-bottom:2rem;" class="small">&copy; 2025 Wakuwaku of the Future Lab. All Rights Reserved.<br>
+      本アプリは学習・運用目的で提供されています。</footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // TOC smooth scroll + active state
+    const tocLinks = document.querySelectorAll('.nav-menu a');
+    tocLinks.forEach(a=>{ a.addEventListener('click', e=>{ if(a.hash){ e.preventDefault(); document.querySelector(a.hash).scrollIntoView({behavior:'smooth', block:'start'}); } }); });
+
+    function updateTOC(){
+      let current='';
+      // 概要ヘッダーもチェック対象に含める
+      const overviewHeader = document.getElementById('overview');
+      if (overviewHeader && overviewHeader.getBoundingClientRect().top <= 120) {
+        current = 'overview';
+      }
+      
+      document.querySelectorAll('main .section').forEach(sec=>{ const r = sec.getBoundingClientRect(); if(r.top <= 120) current = sec.id; });
+      tocLinks.forEach(a=>{ a.classList.toggle('active', a.getAttribute('href') === '#'+current); });
+    }
+    window.addEventListener('scroll', updateTOC); window.addEventListener('load', updateTOC);
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const id = btn.getAttribute('data-target');
+        const el = document.getElementById(id);
+        try{ await navigator.clipboard.writeText(el.innerText); const prev = btn.textContent; btn.textContent='コピー済み'; setTimeout(()=>btn.textContent=prev,900);}catch(e){alert('コピーに失敗しました。手動で選択してください。');}
+      });
+    });
+  </script>
+</body>
+</html>
